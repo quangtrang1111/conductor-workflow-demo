@@ -1,0 +1,283 @@
+{
+  "ownerApp": null,
+  "createTime": 1688124384480,
+  "updateTime": 1688129127230,
+  "createdBy": null,
+  "updatedBy": null,
+  "name": "TestNumberWorkflow",
+  "description": "TestNumberWorkflow",
+  "version": 10,
+  "tasks": [
+    {
+      "name": "ParallelRandomNumber",
+      "taskReferenceName": "ParallelRandomNumber",
+      "description": null,
+      "inputParameters": {},
+      "type": "FORK_JOIN",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "forkTasks": [
+        [
+          {
+            "name": "RandomNumberTask",
+            "taskReferenceName": "RandomNumberTask-1",
+            "description": null,
+            "inputParameters": {
+              "max": "${workflow.input.max}"
+            },
+            "type": "SIMPLE",
+            "dynamicTaskNameParam": null,
+            "caseValueParam": null,
+            "caseExpression": null,
+            "scriptExpression": null,
+            "dynamicForkJoinTasksParam": null,
+            "dynamicForkTasksParam": null,
+            "dynamicForkTasksInputParamName": null,
+            "startDelay": 0,
+            "subWorkflowParam": null,
+            "sink": null,
+            "optional": false,
+            "taskDefinition": null,
+            "rateLimited": null,
+            "asyncComplete": false,
+            "loopCondition": null,
+            "retryCount": null,
+            "evaluatorType": null,
+            "expression": null
+          }
+        ],
+        [
+          {
+            "name": "RandomNumberTask",
+            "taskReferenceName": "RandomNumberTask-2",
+            "description": null,
+            "inputParameters": {
+              "max": "${workflow.input.max}"
+            },
+            "type": "SIMPLE",
+            "dynamicTaskNameParam": null,
+            "caseValueParam": null,
+            "caseExpression": null,
+            "scriptExpression": null,
+            "dynamicForkJoinTasksParam": null,
+            "dynamicForkTasksParam": null,
+            "dynamicForkTasksInputParamName": null,
+            "startDelay": 0,
+            "subWorkflowParam": null,
+            "sink": null,
+            "optional": false,
+            "taskDefinition": null,
+            "rateLimited": null,
+            "asyncComplete": false,
+            "loopCondition": null,
+            "retryCount": null,
+            "evaluatorType": null,
+            "expression": null
+          }
+        ]
+      ],
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": null,
+      "expression": null
+    },
+    {
+      "name": "JoinRandomNumber",
+      "taskReferenceName": "JoinRandomNumber",
+      "description": null,
+      "inputParameters": {},
+      "type": "JOIN",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "joinOn": [
+        "RandomNumberTask-1",
+        "RandomNumberTask-2"
+      ],
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": null,
+      "expression": null
+    },
+    {
+      "name": "SumNumberTask",
+      "taskReferenceName": "SumNumberTask",
+      "description": null,
+      "inputParameters": {
+        "number1": "${JoinRandomNumber.output.RandomNumberTask-1.randomNumber}",
+        "number2": "${JoinRandomNumber.output.RandomNumberTask-2.randomNumber}"
+      },
+      "type": "SIMPLE",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": null,
+      "expression": null
+    },
+    {
+      "name": "SetSumResult",
+      "taskReferenceName": "SetSumResult",
+      "description": null,
+      "inputParameters": {
+        "result": "${SumNumberTask.output.sum}"
+      },
+      "type": "SET_VARIABLE",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": null,
+      "expression": null
+    },
+    {
+      "name": "CheckSmallNumber",
+      "taskReferenceName": "CheckSmallNumber",
+      "description": null,
+      "inputParameters": {
+        "number": "${SumNumberTask.output.sum}"
+      },
+      "type": "SWITCH",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "decisionCases": {
+        "small": [
+          {
+            "name": "DoubleNumberTask",
+            "taskReferenceName": "DoubleNumberTask",
+            "description": null,
+            "inputParameters": {
+              "number": "${SumNumberTask.output.sum}"
+            },
+            "type": "SIMPLE",
+            "dynamicTaskNameParam": null,
+            "caseValueParam": null,
+            "caseExpression": null,
+            "scriptExpression": null,
+            "dynamicForkJoinTasksParam": null,
+            "dynamicForkTasksParam": null,
+            "dynamicForkTasksInputParamName": null,
+            "startDelay": 0,
+            "subWorkflowParam": null,
+            "sink": null,
+            "optional": false,
+            "taskDefinition": null,
+            "rateLimited": null,
+            "asyncComplete": false,
+            "loopCondition": null,
+            "retryCount": null,
+            "evaluatorType": null,
+            "expression": null
+          },
+          {
+            "name": "SetDoubleResult",
+            "taskReferenceName": "SetDoubleResult",
+            "description": null,
+            "inputParameters": {
+              "result": "${DoubleNumberTask.output.doubleNumber}"
+            },
+            "type": "SET_VARIABLE",
+            "dynamicTaskNameParam": null,
+            "caseValueParam": null,
+            "caseExpression": null,
+            "scriptExpression": null,
+            "dynamicForkJoinTasksParam": null,
+            "dynamicForkTasksParam": null,
+            "dynamicForkTasksInputParamName": null,
+            "startDelay": 0,
+            "subWorkflowParam": null,
+            "sink": null,
+            "optional": false,
+            "taskDefinition": null,
+            "rateLimited": null,
+            "asyncComplete": false,
+            "loopCondition": null,
+            "retryCount": null,
+            "evaluatorType": null,
+            "expression": null
+          }
+        ]
+      },
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": "javascript",
+      "expression": "$.number < 10 ? 'small' : 'big'"
+    }
+  ],
+  "inputParameters": [
+    "max"
+  ],
+  "outputParameters": {
+    "result": "${workflow.variables.result}"
+  },
+  "failureWorkflow": null,
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "huynhquangtrang1994@gmail.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {
+    "result": 0
+  },
+  "inputTemplate": {}
+}
